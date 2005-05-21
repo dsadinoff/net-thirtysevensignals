@@ -26,4 +26,4 @@ my $bp = Net::Backpack->new(user => $user, token => $token);
 ok($bp);
 ok(ref $bp eq 'Net::Backpack');
 
-print $bp->list_all_pages;
+print $bp->list_all_pages(xml => 1);

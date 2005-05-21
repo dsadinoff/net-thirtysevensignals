@@ -83,6 +83,27 @@ use XML::Simple;
 
 our $VERSION = '0.01';
 
+my %data = (
+	    'list_all_pages' =>
+	    {
+	     url => '/ws/pages/all',
+	     req => '<request>
+  <token>[S:token]</token>
+</request>'
+	    },
+	    'create_page' =>
+	    {
+	     url => '/ws/pages/new',
+	     req => '<request>
+  <token>[S:token]</token>
+  <page>
+    <title>[P:title]</title>
+    <description>[P:description]</description>
+  </page>
+</request>'
+	    },
+	   );
+
 =head1 METHODS
 
 =head2 $bp = Net::Backpack->new(token => $token, user => $user);
@@ -126,14 +147,11 @@ sub list_all_pages {
   my $self = shift;
   my %params = @_;
 
-  my $url = "$self->{base_url}/ws/pages/all";
+  my $req_data = $data{list_all_pages};
+  my $url = $self->{base_url} . $req_data->{url};
 
   my $req = HTTP::Request->new('POST', $url);
-  $req->content(<<END_REQ);
-<request>
-  <token>$self->{token}</token>
-</request>
-END_REQ
+  $req->content($self->_expand($req_data->{req}, %params));
 
   return $self->_call(%params, req => $req);
 }
@@ -153,17 +171,11 @@ sub create_page {
   croak 'No title for new page' unless $params{title};
   $params{description} ||= '';
 
-  my $url   = "$self->{base_url}/ws/pages/new";
+  my $req_data = $data{create_page};
+  my $url   = $self->{base_url} . $req_data->{url};
 
   my $req   = HTTP::Request->new(POST => $url);
-  $req->content("<request>
-  <token>$self->{token}</token>
-  <page>
-    <title>$params{title}</title>
-    <description>$params{description}</description>
-  </page>
-</request>
-");
+  $req->content($self->_expand($req_data->{req}, %params));
 
   return $self->_call(%params, req => $req);
 }
@@ -307,6 +319,17 @@ sub _call {
     my $data = XMLin($xml);
     return $data;
   }
+}
+
+sub _expand {
+  my $self = shift;
+  my $string = shift;
+  my %params = @_;
+
+  $string =~ s/\[S:(\w+)]/$self->{$1}/g;
+  $string =~ s/\[P:(\w+)]/$params{$1}/g;
+
+  return $string;
 }
 
 =head1 TO DO
