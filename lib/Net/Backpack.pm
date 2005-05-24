@@ -81,7 +81,7 @@ use LWP::UserAgent;
 use HTTP::Request;
 use XML::Simple;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 my %data = (
 	    'list_all_pages' =>
