@@ -102,6 +102,43 @@ my %data = (
   </page>
 </request>'
 	    },
+	    'show_page' =>
+	    {
+	     url => '/ws/page/[P:id]',
+	     req => '<request>
+  <token>[S:token]</token>
+</request>'
+	     },
+	    'destroy_page' =>
+	    {
+	     url => '/ws/page/[P:id]/destroy',
+	     req => '<request>
+  <token>[S:token]</token>
+</request>'
+	    },
+	    'update_title' =>
+	    {
+	     url => '/ws/page/[P:id]/update_title',
+	     req => '<request>
+  <token>[S:token]</token>
+  <page><title>[P:title]</title></page>
+</request>'
+	    },
+	    update_body =>
+	    {
+	     url => '/ws/page/[P:id]/update_body',
+	     req => '<request>
+  <token>[S:token]</token>
+  <page><description>[P:description]</description></page>
+</request>'
+	    },
+	    'duplicate_page' =>
+	    {
+	     url => '/ws/page/[P:id]/duplicate',
+	     req => '<request>
+  <token>[S:token]</token>
+</request>'
+	    },
 	   );
 
 =head1 METHODS
@@ -194,13 +231,12 @@ sub show_page {
 
   croak 'No id' unless $params{id};
 
-  my $url   = "$self->{base_url}/ws/page/$params{id}";
+  my $req_data = $data{show_page};
+  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
 
   my $req   = HTTP::Request->new(POST => $url);
 
-  $req->content("<request>
-  <token>$self->{token}</token>
-</request>");
+  $req->content($self->_expand($req_data->{req}, %params));
 
   return $self->_call(%params, req => $req);
 }
@@ -219,12 +255,12 @@ sub destroy_page {
 
   croak 'No id' unless $params{id};
 
-  my $url   = "$self->{base_url}/ws/page/$params{id}/destroy";
+  my $req_data = $data{destroy_page};
+  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+
   my $req   = HTTP::Request->new(POST => $url);
 
-  $req->content("<request>
-  <token>$self->{token}</token>
-</request>");
+  $req->content($self->_expand($req_data->{req}, %params));
 
   return $self->_call(%params, req => $req);
 }
@@ -244,13 +280,12 @@ sub update_title {
   croak 'No id' unless $params{id};
   croak 'No title' unless $params{title};
 
-  my $url   = "$self->{base_url}/ws/page/$params{id}/update_title";
+  my $req_data = $data{update_title};
+  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+
   my $req   = HTTP::Request->new(POST => $url);
 
-  $req->content("<request>
-  <token>$self->{token}</token>
-  <page><title>$params{title}</title></page>
-</request>");
+  $req->content($self->_expand($req_data->{req}, %params));
 
   return $self->_call(%params, req => $req);
 }
@@ -270,13 +305,11 @@ sub update_body {
   croak 'No id' unless $params{id};
   croak 'No description' unless defined $params{description};
 
-  my $url   = "$self->{base_url}/ws/page/$params{id}/update_body";
+  my $req_data = $data{update_body};
+  my $url   = $self->{base_url} .$self->_expand($req_data->{url}, %params);
   my $req   = HTTP::Request->new(POST => $url);
 
-  $req->content("<request>
-  <token>$self->{token}</token>
-  <page><description>$params{description}</description></page>
-</request>");
+  $req->content($self->_expand($req_data->{req}, %params));
 
   return $self->_call(%params, req => $req);
 }
@@ -295,13 +328,11 @@ sub duplicate_page {
 
   croak 'No id' unless $params{id};
 
-  my $url   = "$self->{base_url}/ws/page/$params{id}/duplicate";
+  my $req_data = $data{duplicate_page};
+  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
   my $req   = HTTP::Request->new(POST => $url);
 
-  $req->content("<request>
-  <token>$self->{token}</token>
-  <page><description>$params{description}</description></page>
-</request>");
+  $req->content($self->_expand($req_data->{req}, %params));
 
   return $self->_call(%params, req => $req);
 }
