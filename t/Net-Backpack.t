@@ -8,22 +8,22 @@
 use Test::More tests => 6;
 BEGIN { use_ok('Net::Backpack') };
 
-my $token = $ENV{BACKPACK_TOKEN} 
-  || die "You must set the environment variable BACKPACK_TOKEN\n";
-my $user = $ENV{BACKPACK_USER}
-  || die "You must set the environment variable BACKPACK_USER\n";
+SKIP: {
+  skip 'BACKPACK_TOKEN and BACKPACK_USER must be set', 5
+    unless $ENV{BACKPACK_TOKEN} && $ENV{BACKPACK_USER};
 
-eval { Net::Backpack->new };
-ok($@);
+  eval { Net::Backpack->new };
+  ok($@);
 
-eval { Net::Backpack->new(user => $user) };
-ok($@);
+  eval { Net::Backpack->new(user => $ENV{BACKPACK_USER}) };
+  ok($@);
 
-eval { Net::Backpack->new(token => $token) };
-ok($@);
+  eval { Net::Backpack->new(token => $ENV{BACKPACK_TOKEN}) };
+  ok($@);
 
-my $bp = Net::Backpack->new(user => $user, token => $token);
-ok($bp);
-ok(ref $bp eq 'Net::Backpack');
+  my $bp = Net::Backpack->new(user  => $ENV{BACKPACK_USER},
+			      token => $ENV{BACKPACK_TOKEN});
+  ok($bp);
+  ok(ref $bp eq 'Net::Backpack');
+}
 
-print $bp->list_all_pages(xml => 1);
