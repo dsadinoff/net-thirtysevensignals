@@ -139,6 +139,56 @@ my %data = (
   <token>[S:token]</token>
 </request>'
 	    },
+	    'link_page' =>
+	    {
+	     url => '/ws/page/[P:to_page]/link',
+	     req => '<request>
+  <token>[S:token]</token>
+  <linked_page_id>[P:link_page]</linked_page_id>
+</request>'
+	    },
+	    'unlink_page' =>
+	    {
+	     url => '/ws/page/[P:from_page]/link',
+	     req => '<request>
+  <token>[S:token]</token>
+  <linked_page_id>[P:link_page]</linked_page_id>
+</request>'
+	    },
+	    'share_people' =>
+	    {
+	     url => '/ws/page/[P:id]/share',
+	     req => '<request>
+  <token>[S:token]</token>
+  <email_addresses>
+    [P:people]
+  </email_addresses>
+</request>'
+	    },
+	    'make_page_public' =>
+	    {
+	     url => '/ws/page/[P:id]/share',
+	     req => '<request>
+  <token>[S:token]</token>
+  <page>
+    <public>[P;public]</public>
+  </page>
+</request>'
+	    },
+	    'unshare_friend_page' =>
+	    {
+	     url => '/ws/page/[P:id]/unshare_friend_page',
+	     req => '<request>
+  <token>[S:token]</token>
+</request>'
+	    },
+	    'email_page' =>
+	    {
+	     url => '/ws/page/[P:id]/email',
+	     req => '<request>
+  <token>[S:token]</token>
+</request>'
+	    },
 	   );
 
 =head1 METHODS
@@ -172,7 +222,7 @@ sub new {
   return bless $self, $class;
 }
 
-=head2 $pages = list_all_pages([xml => 1]);
+=head2 $pages = $bp->list_all_pages([xml => 1]);
 
 Get a list of all of your Backpack pages. Returns a Perl data structure
 unless the C<xml> parameter is true, in which case it returns the raw
@@ -193,7 +243,8 @@ sub list_all_pages {
   return $self->_call(%params, req => $req);
 }
 
-=head2 $page = create_page(title => $title, [description => $desc, xml => 1]);
+=head2 $page = $bp->create_page(title => $title,
+                                [description => $desc, xml => 1]);
 
 Create a new Backpack page with the given title and (optional)
 description. Returns a Perl data structure unless the C<xml> parameter is
@@ -217,7 +268,7 @@ sub create_page {
   return $self->_call(%params, req => $req);
 }
 
-=head2 $rc = show_page(id => $id, [xml => 1]);
+=head2 $rc = $bp->show_page(id => $id, [xml => 1]);
 
 Get details of the Backpack page with the given id. Returns a Perl data
 structure unless the C<xml> parameter is true, in which case it returns the
@@ -241,7 +292,7 @@ sub show_page {
   return $self->_call(%params, req => $req);
 }
 
-=head2 $rc = delete_page(id => $id, [xml => 1]);
+=head2 $rc = $bp->delete_page(id => $id, [xml => 1]);
 
 Delete the Backpack page with the given id. Returns a Perl data structure
 unless the C<xml> parameter is true, in which case it returns the raw XML
@@ -265,7 +316,7 @@ sub destroy_page {
   return $self->_call(%params, req => $req);
 }
 
-=head2 $rc = update_title(id => $id, title => $title, [xml => 1]);
+=head2 $rc = $bp->update_title(id => $id, title => $title, [xml => 1]);
 
 Update the title of the given Backpack page. Returns a Perl data structure
 unless the C<xml> parameter is true, in which case it returns the raw XML 
@@ -290,7 +341,7 @@ sub update_title {
   return $self->_call(%params, req => $req);
 }
 
-=head2 $rc = update_body(id => $id, description => $desc, [xml => 1]);
+=head2 $rc = $bp->update_body(id => $id, description => $desc, [xml => 1]);
 
 Update the description of the given Backpack page. Returns a Perl data
 structure unless the C<xml> parameter is true, in which case it returns the
@@ -314,7 +365,7 @@ sub update_body {
   return $self->_call(%params, req => $req);
 }
 
-=head2 $page = duplicate_page(id => $id, [xml => 1]);
+=head2 $page = $bp->duplicate_page(id => $id, [xml => 1]);
 
 Create a duplicate of the given Backpack page. Returns a Perl data
 structure unless the C<xml> parameter is true, in which case it returns the
@@ -329,6 +380,148 @@ sub duplicate_page {
   croak 'No id' unless $params{id};
 
   my $req_data = $data{duplicate_page};
+  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+  my $req   = HTTP::Request->new(POST => $url);
+
+  $req->content($self->_expand($req_data->{req}, %params));
+
+  return $self->_call(%params, req => $req);
+}
+
+=head2 $rc = $bp->link_page(link_page => $id1, to_page => $id2, [xml => 1]);
+
+Link one Backpack page to another. Returns a Perl data structure unless the
+C<xml> parameter is true, in which case it returns the raw XML as returned
+by the Backpack server.
+
+=cut
+
+sub link_page {
+  my $self = shift;
+  my %params = @_;
+
+  croak 'No id' unless $params{link_page} and $params{to_page};
+
+  my $req_data = $data{link_page};
+  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+  my $req   = HTTP::Request->new(POST => $url);
+
+  $req->content($self->_expand($req_data->{req}, %params));
+
+  return $self->_call(%params, req => $req);
+}
+
+=head2 $rc = $bp->unlink_page(link_page => $id1, from_page => $id2,
+                              [xml => 1]);
+
+Unlink one Backpack page from another. Returns a Perl data structure unless
+the C<xml> parameter is true, in which case it returns the raw XML as returned
+by the Backpack server.
+
+=cut
+
+sub unlink_page {
+  my $self = shift;
+  my %params = @_;
+
+  croak 'No id' unless $params{link_page} and $params{from_page};
+
+  my $req_data = $data{unlink_page};
+  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+  my $req   = HTTP::Request->new(POST => $url);
+
+  $req->content($self->_expand($req_data->{req}, %params));
+
+  return $self->_call(%params, req => $req);
+}
+
+=head2 $rc = $bp->share_page_with_people(id => $id, people => \@people,
+                                         [ xml => 1 ]);
+
+Share a given Backpack page with a list of other people. The parameter
+'people' is a list of email addresses of the people you wish to share the
+page with.
+
+=cut
+
+sub share_page {
+  my $self = shift;
+  my %params = @_;
+
+  croak 'No id' unless $params{id};
+  croak 'No people' unless scalar @{$params{people}};
+
+  $params{people} = join "\n", @{$params{people}};
+  my $req_data = $data{share_people};
+  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+  my $req   = HTTP::Request->new(POST => $url);
+
+  $req->content($self->_expand($req_data->{req}, %params));
+
+  return $self->_call(%params, req => $req);
+}
+
+=head2 $rc = $bp->make_page_public(id => $id, public => $public,
+                                   [ xml => 1 ]);
+
+Make a given Backpage page public or private. The parameter 'public' is
+a boolean flag indicating whether the page should be made public or
+private
+
+=cut
+
+sub make_page_public {
+  my $self = shift;
+  my %params = @_;
+
+  croak 'No id' unless $params{id};
+  croak 'No public flag' unless exists $params{public};
+
+  $params{public} = !!$params{public};
+  my $req_data = $data{make_page_public};
+  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+  my $req   = HTTP::Request->new(POST => $url);
+
+  $req->content($self->_expand($req_data->{req}, %params));
+
+  return $self->_call(%params, req => $req);
+}
+
+=head2 $rc = $bp->unshare_friend_page(id => $id, [ xml => 1 ]);
+
+Unshare yourself from a friend's page.
+
+=cut
+
+sub unshare_friend_page {
+  my $self = shift;
+  my %params = @_;
+
+  croak 'No id' unless $params{id};
+
+  my $req_data = $data{unshare_friend_page};
+  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+  my $req   = HTTP::Request->new(POST => $url);
+
+  $req->content($self->_expand($req_data->{req}, %params));
+
+  return $self->_call(%params, req => $req);
+}
+
+
+=head2 $rc = $bp->email_page(id => $id, [ xml => 1 ]);
+
+Email a page to yourself.
+
+=cut
+
+sub email_page {
+  my $self = shift;
+  my %params = @_;
+
+  croak 'No id' unless $params{id};
+
+  my $req_data = $data{email_page};
   my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
   my $req   = HTTP::Request->new(POST => $url);
 
