@@ -3,6 +3,8 @@ Build.PL
 MANIFEST
 README
 t/Net-Backpack.t
+t/pod.t
+t/pod_coverage.t
 lib/Net/Backpack.pm
 META.yml                                 Module meta-data (added by MakeMaker)
 Makefile.PL
