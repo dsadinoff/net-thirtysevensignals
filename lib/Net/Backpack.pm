@@ -1226,7 +1226,7 @@ sub _call {
   if ($params{xml}) {
     return $xml;
   } else {
-    my $data = XMLin($xml);
+    my $data = XMLin($xml, ForceArray => 1);
     return $data;
   }
 }
