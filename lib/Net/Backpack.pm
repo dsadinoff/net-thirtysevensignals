@@ -72,11 +72,11 @@ you (although it is also possible to get back the raw XML).
 
 Net::Backpack uses XML::Simple to parse the data that is returned from
 Backpack. From version 1.10 of Net::Backpack has changed. By default we
-now pass the parameter C<ForceArray =E<>> 1> to XML::Simple. This will
+now pass the parameter C<ForceArray =E<gt> 1> to XML::Simple. This will
 change the Perl data structure returned by most calls.
 
 To get the old behaviour back, you can pass the parameter C<forcearray
-=E<>> 0> to the C<new> function.
+=E<gt> 0> to the C<new> function.
 
 =cut
 
