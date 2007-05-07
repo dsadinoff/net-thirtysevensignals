@@ -91,7 +91,7 @@ use LWP::UserAgent;
 use HTTP::Request;
 use XML::Simple;
 
-our $VERSION = sprintf "%d.%02d", '$Revision$ ' =~ /(\d+)\.(\d+)/;
+our $VERSION = '1.12';
 
 my %data = (
 	    'list_all_pages' =>
@@ -118,7 +118,7 @@ my %data = (
 	     req => '<request>
   <token>[S:token]</token>
 </request>'
-	     },
+	    },
 	    'destroy_page' =>
 	    {
 	     url => '/ws/page/[P:id]/destroy',
@@ -199,14 +199,14 @@ my %data = (
   <token>[S:token]</token>
 </request>'
 	    },
-		'list_all_items' =>
+	    'list_all_items' =>
 	    {
 	     url => '/ws/page/[P:page_id]/items/list',
 	     req => '<request>
   <token>[S:token]</token> 
 </request>'
 	    },
-		'create_item' =>
+	    'create_item' =>
 	    {
 	     url => '/ws/page/[P:page_id]/items/add',
 	     req => '<request>
@@ -216,7 +216,7 @@ my %data = (
   </item>
 </request>'
 	    },
-		'update_item' =>
+	    'update_item' =>
 	    {
 	     url => '/ws/page/[P:page_id]/items/update/[P:id]',
 	     req => '<request>
@@ -226,21 +226,21 @@ my %data = (
   </item>
 </request>'
 	    },
-		'toggle_item' =>
+	    'toggle_item' =>
 	    {
 	     url => '/ws/page/[P:page_id]/items/toggle/[P:id]',
 	     req => '<request>
   <token>[S:token]</token> 
 </request>'
 	    },
-		'destroy_item' =>
+	    'destroy_item' =>
 	    {
 	     url => '/ws/page/[P:page_id]/items/destroy/[P:id]',
 	     req => '<request>
   <token>[S:token]</token> 
 </request>'
 	    },
-		'move_item' =>
+	    'move_item' =>
 	    {
 	     url => '/ws/page/[P:page_id]/items/move/[P:id]',
 	     req => '<request>
@@ -248,14 +248,14 @@ my %data = (
   <direction>[P:direction]</direction>
 </request>'
 	    },
-		'list_all_notes' =>
+	    'list_all_notes' =>
 	    {
 	     url => '/ws/page/[P:page_id]/notes/list',
 	     req => '<request>
   <token>[S:token]</token> 
 </request>'
 	    },
-		'create_note' =>
+	    'create_note' =>
 	    {
 	     url => '/ws/page/[P:page_id]/notes/create',
 	     req => '<request>
@@ -266,7 +266,7 @@ my %data = (
   </note>
 </request>'
 	    },
-		'update_note' =>
+	    'update_note' =>
 	    {
 	     url => '/ws/page/[P:page_id]/notes/update/[P:id]',
 	     req => '<request>
@@ -277,21 +277,21 @@ my %data = (
   </note>
 </request>'
 	    },
-		'destroy_note' =>
+	    'destroy_note' =>
 	    {
 	     url => '/ws/page/[P:page_id]/notes/destroy/[P:id]',
 	     req => '<request>
   <token>[S:token]</token> 
 </request>'
 	    },
-		'get_tag_pages' =>
+	    'get_tag_pages' =>
 	    {
 	     url => '/ws/tags/[P:page_id]',
 	     req => '<request>
   <token>[S:token]</token> 
 </request>'
 	    },
-		'set_page_tags' =>
+	    'set_page_tags' =>
 	    {
 	     url => '/ws/page/[P:page_id]/tags/tag',
 	     req => '<request>
@@ -299,14 +299,14 @@ my %data = (
   <tags>[P:tags]</tags>
 </request>'
 	    },
-		'upcoming_reminders' =>
+	    'upcoming_reminders' =>
 	    {
 	     url => '/ws/reminders',
 	     req => '<request>
   <token>[S:token]</token> 
 </request>'
 	    },
-		'create_reminder' =>
+	    'create_reminder' =>
 	    {
 	     url => '/ws/reminders/create',
 	     req => '<request>
@@ -317,7 +317,7 @@ my %data = (
   </reminder>
 </request>'
 	    },
-		'update_reminder' =>
+	    'update_reminder' =>
 	    {
 	     url => '/ws/reminders/update/[P:id]',
 	     req => '<request>
@@ -328,39 +328,88 @@ my %data = (
   </reminder>
 </request>'
 	    },
-		'destroy_reminder' =>
+	    'destroy_reminder' =>
 	    {
 	     url => '/ws/reminders/destroy/[P:id]',
 	     req => '<request>
   <token>[S:token]</token> 
 </request>'
 	    },
-		'list_all_emails' =>
+	    'list_all_emails' =>
 	    {
 	     url => '/ws/page/[P:page_id]/emails/list',
 	     req => '<request>
   <token>[S:token]</token> 
 </request>'
 	    },
-		'show_email' =>
+	    'show_email' =>
 	    {
 	     url => '/ws/page/[P:page_id]/emails/show/[P:id]',
 	     req => '<request>
   <token>[S:token]</token> 
 </request>'
 	    },
-		'destroy_email' =>
+	    'destroy_email' =>
 	    {
 	     url => '/ws/page/[P:page_id]/emails/destroy/[P:id]',
 	     req => '<request>
   <token>[S:token]</token> 
 </request>'
 	    },
-		'export' =>
+	    'export' =>
 	    {
 	     url => '/ws/account/export',
 	     req => '<request>
   <token>[S:token]</token> 
+</request>'
+	    },
+	    'list_all_lists' =>
+	    {
+	     url => '/ws/page/[P:page_id]/lists/list',
+	     req => '<request>
+  <token>[S:token]</token>
+</request>'
+	    },
+	    'list_this_list' =>
+	    {
+	     url => '/ws/page/[P:page_id]/items/list?list_id=[P:list_id]',
+	     req => '<request>
+  <token>[S:token]</token>
+</request>'
+	    },
+	    'create_list' =>
+	    {
+	     url => '/ws/page/[P:page_id]/lists/add',
+	     req => '<request>
+  <token>[S:token]</token>
+    <name>[P:title]</name>
+</request>'	
+	    },
+	    'update_list' =>
+	    {
+	     url => '/ws/page/[P:page_id]/lists/update/[P:list_id]',
+	     req =>	'<request>
+  <token>[S:token]</token>
+  <list>
+    <name>[P:title]</name>
+  </list>
+</request>'
+	    },
+	    'destroy_list' =>
+	    {
+	     url => '/ws/page/[P:page_id]/lists/destroy/[P:list_id]',
+	     req => '<request>
+  <token>[S:token]</token>
+</request>'
+	    },
+	    'create_list_item' =>
+	    {
+	     url => '/ws/page/[P:page_id]/items/add?list_id=[P:list_id]',
+	     req =>	'<request>
+  <token>[S:token]</token>
+  <item>
+    <content>[P:item]</content>
+  </item>
 </request>'
 	    },
 	   );
@@ -1224,6 +1273,157 @@ sub export {
 
   my $req_data = $data{export};
   my $url = $self->{base_url} . $req_data->{url};
+
+  my $req = HTTP::Request->new('POST', $url);
+  $req->content($self->_expand($req_data->{req}, %params));
+
+  return $self->_call(%params, req => $req);
+}
+
+=head2 $lists = $bp->list_all_lists(page_id => $page_id, [xml => 1]);
+
+Get a list of *all* of your Backpack checklists for a specific page.
+Returns a Perl data structure unless the C<xml> parameter is true,
+in which case it returns the raw XML as returned by the Backpack server.
+
+=cut
+
+sub list_all_lists {
+  my $self = shift;
+  my %params = @_;
+
+  croak 'No id' unless $params{page_id};
+
+  my $req_data = $data{list_all_lists};
+  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+
+  my $req = HTTP::Request->new('POST', $url);
+  $req->content($self->_expand($req_data->{req}, %params));
+
+  return $self->_call(%params, req => $req);	
+}
+
+=head2 $list = $bp->list_this_list(page_id => $page_id, list_id => $list_id, [xml => 1]);
+
+Get details of a specific list with the given list_id on a specific Backpack
+page with the given page_id. Returns a Perl data structure unless the C<xml>
+parameter is true, in which case it returns the raw XML as returned by the
+Backpack server.
+
+=cut
+
+sub list_this_list {
+  my $self = shift;
+  my %params = @_;
+
+  croak 'No page id' unless $params{page_id};
+  croak 'No list id' unless $params{list_id};
+
+  my $req_data = $data{list_this_list};
+  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+
+  my $req = HTTP::Request->new('POST', $url);
+  $req->content($self->_expand($req_data->{req}, %params));
+
+  return $self->_call(%params, req => $req);
+}
+
+=head2 $list = $bp->create_list(page_id => $page_id, title => $title, [xml => 1]);
+
+Create a new Backpack checklist given a page id and a list title.
+Returns a Perl data structure unless the C<xml> parameter is true, in which
+case it returns the raw XML as returned by the Backpack server.
+
+=cut
+
+sub create_list {
+  my $self = shift;
+  my %params = @_;
+
+  croak 'No page id' unless $params{page_id};
+  croak 'No list title' unless $params{title};
+
+  my $req_data = $data{create_list};
+  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+
+  my $req = HTTP::Request->new('POST', $url);
+  $req->content($self->_expand($req_data->{req}, %params));
+
+  return $self->_call(%params, req => $req);
+}
+
+=head2 $list = $bp->update_list(page_id => $page_id, list_id => $list_id, title => $title, [xml => 1]);
+
+Update the title of a specific list with the given list_id on a specific
+Backpack page with the given page_id. Returns a Perl data structure unless
+the C<xml> parameter is true, in which case it returns the raw XML as
+returned by the Backpack server.
+
+=cut
+
+sub update_list {
+  my $self = shift;
+  my %params = @_;
+
+  croak 'No page id' unless $params{page_id};
+  croak 'No list id' unless $params{list_id};
+  croak 'No title' unless $params{title};
+
+  my $req_data = $data{update_list};
+  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+
+  my $req = HTTP::Request->new('POST', $url);
+  $req->content($self->_expand($req_data->{req}, %params));
+
+  return $self->_call(%params, req => $req);
+}
+
+=head2 $list = $bp->destroy_list(page_id => $page_id, list_id => $list_id, [xml => 1]);
+
+Destroy a specific list with the given list_id on a specific Backpack page
+with the given page_id. Returns a Perl data structure unless the C<xml>
+parameter is true, in which case it returns the raw XML as returned by the
+Backpack server.
+
+=cut
+
+sub destroy_list {
+  my $self = shift;
+  my %params = @_;
+
+  croak 'No page id' unless $params{page_id};
+  croak 'No list id' unless $params{list_id};
+
+  my $req_data = $data{destroy_list};
+  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+
+  my $req = HTTP::Request->new('POST', $url);
+  $req->content($self->_expand($req_data->{req}, %params));
+
+  return $self->_call(%params, req => $req);
+}
+
+=head2 $list = $bp->create_list_item(page_id => $page_id, list_id => $list_id, item = $item, [xml => 1]);
+
+Create an item on a specific list with the given list_id on a specific
+Backpack page with the given page_id. This differs from the usual
+"create_item" function in that you can specify which list on a page you want
+to add the item to. Returns a Perl data structure unless the C<xml> parameter
+is true, in which case it returns the raw XML as returned by the Backpack
+server.
+
+=cut
+
+sub create_list_item {
+  my $self = shift;
+  my %params = @_;
+
+  croak 'No page id' unless $params{page_id};
+  croak 'No list id' unless $params{list_id};
+  croak 'No item content' unless $params{item};
+
+  my $req_data = $data{create_list_item};
+  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
 
   my $req = HTTP::Request->new('POST', $url);
   $req->content($self->_expand($req_data->{req}, %params));
