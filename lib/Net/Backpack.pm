@@ -9,7 +9,8 @@ Net::Backpack - Perl extension for interfacing with Backpack
   use Net::Backpack;
 
   my $bp = Net::Backpack(user  => $your_backpack_username,
-                         token => $your_backpack_api_token);
+                         token => $your_backpack_api_token,
+                         ssl   => $use_ssl);
 
   # Fill out a Perl data structure with information about
   # your Backspace pages.
@@ -91,7 +92,7 @@ use LWP::UserAgent;
 use HTTP::Request;
 use XML::Simple;
 
-our $VERSION = '1.12';
+our $VERSION = '1.13';
 
 my %data = (
 	    'list_all_pages' =>
@@ -416,7 +417,7 @@ my %data = (
 
 =head1 METHODS
 
-=head2 $bp = Net::Backpack->new(token => $token, user => $user, [forcearray => 0);
+=head2 $bp = Net::Backpack->new(token => $token, user => $user, [forcearray => 0], ssl => 0);
 
 Creates a new Net::Backpack object. All communication with the
 Backpack server is made through this object.
@@ -424,9 +425,12 @@ Backpack server is made through this object.
 Takes two mandatory arguments, your Backpack API token and your
 Backpack username. Returns the new Net:Backpack object.
 
-There is also an optional third parameter, forcearray. This controls the
+There is also an optional parameter, forcearray. This controls the
 value of the C<ForceArray> parameter that is used by C<XML::Simple>. The 
 default value is 1.
+
+If the C<ssl> parameter is provided, then communication will take
+place over SSL.  This is required for Plus and Premium accounts.
 
 =cut
 
@@ -440,13 +444,15 @@ sub new {
   $self->{user}  = $params{user}
     || croak "No Backpack API user passed Net::Backpack::new\n";
 
+  $self->{protocol} = $params{ssl} ? 'https' : 'http';
+
   $self->{forcearray} = $params{forcearray} || 1;
 
   $self->{ua} = LWP::UserAgent->new;
   $self->{ua}->env_proxy;
   $self->{ua}->default_header('X-POST-DATA-FORMAT' => 'xml');
 
-  $self->{base_url} = "http://$self->{user}.backpackit.com";
+  $self->{base_url} = "$self->{protocol}://$self->{user}.backpackit.com";
 
   return bless $self, $class;
 }
