@@ -92,7 +92,7 @@ use LWP::UserAgent;
 use HTTP::Request;
 use XML::Simple;
 
-our $VERSION = '1.13';
+our $VERSION = '1.14';
 
 my %data = (
 	    'list_all_pages' =>
@@ -1480,7 +1480,7 @@ More tests
 
 =head1 AUTHOR
 
-Dave Cross E<lt>dave@dave@dave.org.ukE<gt>
+Dave Cross E<lt>dave@dave@mag-sol.comE<gt>
 
 Please feel free to email me to tell me how you are using the module.
 
