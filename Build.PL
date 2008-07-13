@@ -1,6 +1,7 @@
 use Module::Build;
 
 my $build = Module::Build->new(module_name => 'Net::Backpack',
+                               dist_version => '1.14',
 			       license => 'perl',
  			       requires => {
 			 		    perl             => '5.6.0',

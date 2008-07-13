@@ -1490,7 +1490,7 @@ Lots of stuff implemented by neshura when I was being too tardy!
 
 Please report bugs by email to E<lt>bug-Net-Backpack@rt.cpan.orgE<gt>.
 
-=head1 COPYRIGHT
+=head1 LICENSE AND COPYRIGHT
 
 Copyright (c) 2005, Dave Cross.  All Rights Reserved.
 
