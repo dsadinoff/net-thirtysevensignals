@@ -95,325 +95,286 @@ use XML::Simple;
 our $VERSION = '1.14';
 
 my %data = (
-	    'list_all_pages' =>
-	    {
-	     url => '/ws/pages/all',
-	     req => '<request>
+    'list_all_pages' => {
+        url => '/ws/pages/all',
+        req => '<request>
   <token>[S:token]</token>
 </request>'
-	    },
-	    'create_page' =>
-	    {
-	     url => '/ws/pages/new',
-	     req => '<request>
+    },
+    'create_page' => {
+        url => '/ws/pages/new',
+        req => '<request>
   <token>[S:token]</token>
   <page>
     <title>[P:title]</title>
     <description>[P:description]</description>
   </page>
 </request>'
-	    },
-	    'show_page' =>
-	    {
-	     url => '/ws/page/[P:id]',
-	     req => '<request>
+    },
+    'show_page' => {
+        url => '/ws/page/[P:id]',
+        req => '<request>
   <token>[S:token]</token>
 </request>'
-	    },
-	    'destroy_page' =>
-	    {
-	     url => '/ws/page/[P:id]/destroy',
-	     req => '<request>
+    },
+    'destroy_page' => {
+        url => '/ws/page/[P:id]/destroy',
+        req => '<request>
   <token>[S:token]</token>
 </request>'
-	    },
-	    'update_title' =>
-	    {
-	     url => '/ws/page/[P:id]/update_title',
-	     req => '<request>
+    },
+    'update_title' => {
+        url => '/ws/page/[P:id]/update_title',
+        req => '<request>
   <token>[S:token]</token>
   <page><title>[P:title]</title></page>
 </request>'
-	    },
-	    update_body =>
-	    {
-	     url => '/ws/page/[P:id]/update_body',
-	     req => '<request>
+    },
+    update_body => {
+        url => '/ws/page/[P:id]/update_body',
+        req => '<request>
   <token>[S:token]</token>
   <page><description>[P:description]</description></page>
 </request>'
-	    },
-	    'duplicate_page' =>
-	    {
-	     url => '/ws/page/[P:id]/duplicate',
-	     req => '<request>
+    },
+    'duplicate_page' => {
+        url => '/ws/page/[P:id]/duplicate',
+        req => '<request>
   <token>[S:token]</token>
 </request>'
-	    },
-	    'link_page' =>
-	    {
-	     url => '/ws/page/[P:to_page]/link',
-	     req => '<request>
+    },
+    'link_page' => {
+        url => '/ws/page/[P:to_page]/link',
+        req => '<request>
   <token>[S:token]</token>
   <linked_page_id>[P:link_page]</linked_page_id>
 </request>'
-	    },
-	    'unlink_page' =>
-	    {
-	     url => '/ws/page/[P:from_page]/link',
-	     req => '<request>
+    },
+    'unlink_page' => {
+        url => '/ws/page/[P:from_page]/link',
+        req => '<request>
   <token>[S:token]</token>
   <linked_page_id>[P:link_page]</linked_page_id>
 </request>'
-	    },
-	    'share_people' =>
-	    {
-	     url => '/ws/page/[P:id]/share',
-	     req => '<request>
+    },
+    'share_people' => {
+        url => '/ws/page/[P:id]/share',
+        req => '<request>
   <token>[S:token]</token>
   <email_addresses>
     [P:people]
   </email_addresses>
 </request>'
-	    },
-	    'make_page_public' =>
-	    {
-	     url => '/ws/page/[P:id]/share',
-	     req => '<request>
+    },
+    'make_page_public' => {
+        url => '/ws/page/[P:id]/share',
+        req => '<request>
   <token>[S:token]</token>
   <page>
     <public>[P:public]</public>
   </page>
 </request>'
-	    },
-	    'unshare_friend_page' =>
-	    {
-	     url => '/ws/page/[P:id]/unshare_friend_page',
-	     req => '<request>
+    },
+    'unshare_friend_page' => {
+        url => '/ws/page/[P:id]/unshare_friend_page',
+        req => '<request>
   <token>[S:token]</token>
 </request>'
-	    },
-	    'email_page' =>
-	    {
-	     url => '/ws/page/[P:id]/email',
-	     req => '<request>
+    },
+    'email_page' => {
+        url => '/ws/page/[P:id]/email',
+        req => '<request>
   <token>[S:token]</token>
 </request>'
-	    },
-	    'list_all_items' =>
-	    {
-	     url => '/ws/page/[P:page_id]/items/list',
-	     req => '<request>
+    },
+    'list_all_items' => {
+        url => '/ws/page/[P:page_id]/items/list',
+        req => '<request>
   <token>[S:token]</token> 
 </request>'
-	    },
-	    'create_item' =>
-	    {
-	     url => '/ws/page/[P:page_id]/items/add',
-	     req => '<request>
+    },
+    'create_item' => {
+        url => '/ws/page/[P:page_id]/items/add',
+        req => '<request>
   <token>[S:token]</token> 
   <item>
     <content>[P:item]</content>
   </item>
 </request>'
-	    },
-	    'update_item' =>
-	    {
-	     url => '/ws/page/[P:page_id]/items/update/[P:id]',
-	     req => '<request>
+    },
+    'update_item' => {
+        url => '/ws/page/[P:page_id]/items/update/[P:id]',
+        req => '<request>
   <token>[S:token]</token> 
   <item>
     <content>[P:item]</content>
   </item>
 </request>'
-	    },
-	    'toggle_item' =>
-	    {
-	     url => '/ws/page/[P:page_id]/items/toggle/[P:id]',
-	     req => '<request>
+    },
+    'toggle_item' => {
+        url => '/ws/page/[P:page_id]/items/toggle/[P:id]',
+        req => '<request>
   <token>[S:token]</token> 
 </request>'
-	    },
-	    'destroy_item' =>
-	    {
-	     url => '/ws/page/[P:page_id]/items/destroy/[P:id]',
-	     req => '<request>
+    },
+    'destroy_item' => {
+        url => '/ws/page/[P:page_id]/items/destroy/[P:id]',
+        req => '<request>
   <token>[S:token]</token> 
 </request>'
-	    },
-	    'move_item' =>
-	    {
-	     url => '/ws/page/[P:page_id]/items/move/[P:id]',
-	     req => '<request>
+    },
+    'move_item' => {
+        url => '/ws/page/[P:page_id]/items/move/[P:id]',
+        req => '<request>
   <token>[S:token]</token> 
   <direction>[P:direction]</direction>
 </request>'
-	    },
-	    'list_all_notes' =>
-	    {
-	     url => '/ws/page/[P:page_id]/notes/list',
-	     req => '<request>
+    },
+    'list_all_notes' => {
+        url => '/ws/page/[P:page_id]/notes/list',
+        req => '<request>
   <token>[S:token]</token> 
 </request>'
-	    },
-	    'create_note' =>
-	    {
-	     url => '/ws/page/[P:page_id]/notes/create',
-	     req => '<request>
+    },
+    'create_note' => {
+        url => '/ws/page/[P:page_id]/notes/create',
+        req => '<request>
   <token>[S:token]</token> 
   <note>
     <title>[P:title]</title>
     <body>[P:body]</body>
   </note>
 </request>'
-	    },
-	    'update_note' =>
-	    {
-	     url => '/ws/page/[P:page_id]/notes/update/[P:id]',
-	     req => '<request>
+    },
+    'update_note' => {
+        url => '/ws/page/[P:page_id]/notes/update/[P:id]',
+        req => '<request>
   <token>[S:token]</token> 
   <note>
     <title>[P:title]</title>
     <body>[P:body]</body>
   </note>
 </request>'
-	    },
-	    'destroy_note' =>
-	    {
-	     url => '/ws/page/[P:page_id]/notes/destroy/[P:id]',
-	     req => '<request>
+    },
+    'destroy_note' => {
+        url => '/ws/page/[P:page_id]/notes/destroy/[P:id]',
+        req => '<request>
   <token>[S:token]</token> 
 </request>'
-	    },
-	    'get_tag_pages' =>
-	    {
-	     url => '/ws/tags/[P:page_id]',
-	     req => '<request>
+    },
+    'get_tag_pages' => {
+        url => '/ws/tags/[P:page_id]',
+        req => '<request>
   <token>[S:token]</token> 
 </request>'
-	    },
-	    'set_page_tags' =>
-	    {
-	     url => '/ws/page/[P:page_id]/tags/tag',
-	     req => '<request>
+    },
+    'set_page_tags' => {
+        url => '/ws/page/[P:page_id]/tags/tag',
+        req => '<request>
   <token>[S:token]</token> 
   <tags>[P:tags]</tags>
 </request>'
-	    },
-	    'upcoming_reminders' =>
-	    {
-	     url => '/ws/reminders',
-	     req => '<request>
+    },
+    'upcoming_reminders' => {
+        url => '/ws/reminders',
+        req => '<request>
   <token>[S:token]</token> 
 </request>'
-	    },
-	    'create_reminder' =>
-	    {
-	     url => '/ws/reminders/create',
-	     req => '<request>
+    },
+    'create_reminder' => {
+        url => '/ws/reminders/create',
+        req => '<request>
   <token>[S:token]</token>
   <reminder>
     <content>[P:content]</content>
 	<remind_at>[P:remind_at]</remind_at>
   </reminder>
 </request>'
-	    },
-	    'update_reminder' =>
-	    {
-	     url => '/ws/reminders/update/[P:id]',
-	     req => '<request>
+    },
+    'update_reminder' => {
+        url => '/ws/reminders/update/[P:id]',
+        req => '<request>
   <token>[S:token]</token> 
   <reminder>
     <content>[P:content]</content>
 	<remind_at>[P:remind_at]</remind_at>
   </reminder>
 </request>'
-	    },
-	    'destroy_reminder' =>
-	    {
-	     url => '/ws/reminders/destroy/[P:id]',
-	     req => '<request>
+    },
+    'destroy_reminder' => {
+        url => '/ws/reminders/destroy/[P:id]',
+        req => '<request>
   <token>[S:token]</token> 
 </request>'
-	    },
-	    'list_all_emails' =>
-	    {
-	     url => '/ws/page/[P:page_id]/emails/list',
-	     req => '<request>
+    },
+    'list_all_emails' => {
+        url => '/ws/page/[P:page_id]/emails/list',
+        req => '<request>
   <token>[S:token]</token> 
 </request>'
-	    },
-	    'show_email' =>
-	    {
-	     url => '/ws/page/[P:page_id]/emails/show/[P:id]',
-	     req => '<request>
+    },
+    'show_email' => {
+        url => '/ws/page/[P:page_id]/emails/show/[P:id]',
+        req => '<request>
   <token>[S:token]</token> 
 </request>'
-	    },
-	    'destroy_email' =>
-	    {
-	     url => '/ws/page/[P:page_id]/emails/destroy/[P:id]',
-	     req => '<request>
+    },
+    'destroy_email' => {
+        url => '/ws/page/[P:page_id]/emails/destroy/[P:id]',
+        req => '<request>
   <token>[S:token]</token> 
 </request>'
-	    },
-	    'export' =>
-	    {
-	     url => '/ws/account/export',
-	     req => '<request>
+    },
+    'export' => {
+        url => '/ws/account/export',
+        req => '<request>
   <token>[S:token]</token> 
 </request>'
-	    },
-	    'list_all_lists' =>
-	    {
-	     url => '/ws/page/[P:page_id]/lists/list',
-	     req => '<request>
+    },
+    'list_all_lists' => {
+        url => '/ws/page/[P:page_id]/lists/list',
+        req => '<request>
   <token>[S:token]</token>
 </request>'
-	    },
-	    'list_this_list' =>
-	    {
-	     url => '/ws/page/[P:page_id]/items/list?list_id=[P:list_id]',
-	     req => '<request>
+    },
+    'list_this_list' => {
+        url => '/ws/page/[P:page_id]/items/list?list_id=[P:list_id]',
+        req => '<request>
   <token>[S:token]</token>
 </request>'
-	    },
-	    'create_list' =>
-	    {
-	     url => '/ws/page/[P:page_id]/lists/add',
-	     req => '<request>
+    },
+    'create_list' => {
+        url => '/ws/page/[P:page_id]/lists/add',
+        req => '<request>
   <token>[S:token]</token>
     <name>[P:title]</name>
-</request>'	
-	    },
-	    'update_list' =>
-	    {
-	     url => '/ws/page/[P:page_id]/lists/update/[P:list_id]',
-	     req =>	'<request>
+</request>'
+    },
+    'update_list' => {
+        url => '/ws/page/[P:page_id]/lists/update/[P:list_id]',
+        req => '<request>
   <token>[S:token]</token>
   <list>
     <name>[P:title]</name>
   </list>
 </request>'
-	    },
-	    'destroy_list' =>
-	    {
-	     url => '/ws/page/[P:page_id]/lists/destroy/[P:list_id]',
-	     req => '<request>
+    },
+    'destroy_list' => {
+        url => '/ws/page/[P:page_id]/lists/destroy/[P:list_id]',
+        req => '<request>
   <token>[S:token]</token>
 </request>'
-	    },
-	    'create_list_item' =>
-	    {
-	     url => '/ws/page/[P:page_id]/items/add?list_id=[P:list_id]',
-	     req =>	'<request>
+    },
+    'create_list_item' => {
+        url => '/ws/page/[P:page_id]/items/add?list_id=[P:list_id]',
+        req => '<request>
   <token>[S:token]</token>
   <item>
     <content>[P:item]</content>
   </item>
 </request>'
-	    },
-	   );
+    },
+);
 
 =head1 METHODS
 
@@ -435,26 +396,26 @@ place over SSL.  This is required for Plus and Premium accounts.
 =cut
 
 sub new {
-  my $class = shift;
-  my %params = @_;
+    my $class  = shift;
+    my %params = @_;
 
-  my $self;
-  $self->{token} = $params{token}
-    || croak "No Backpack API token passed Net::Backpack::new\n";
-  $self->{user}  = $params{user}
-    || croak "No Backpack API user passed Net::Backpack::new\n";
+    my $self;
+    $self->{token} = $params{token}
+      || croak "No Backpack API token passed Net::Backpack::new\n";
+    $self->{user} = $params{user}
+      || croak "No Backpack API user passed Net::Backpack::new\n";
 
-  $self->{protocol} = $params{ssl} ? 'https' : 'http';
+    $self->{protocol} = $params{ssl} ? 'https' : 'http';
 
-  $self->{forcearray} = $params{forcearray} || 1;
+    $self->{forcearray} = $params{forcearray} || 1;
 
-  $self->{ua} = LWP::UserAgent->new;
-  $self->{ua}->env_proxy;
-  $self->{ua}->default_header('X-POST-DATA-FORMAT' => 'xml');
+    $self->{ua} = LWP::UserAgent->new;
+    $self->{ua}->env_proxy;
+    $self->{ua}->default_header( 'X-POST-DATA-FORMAT' => 'xml' );
 
-  $self->{base_url} = "$self->{protocol}://$self->{user}.backpackit.com";
+    $self->{base_url} = "$self->{protocol}://$self->{user}.backpackit.com";
 
-  return bless $self, $class;
+    return bless $self, $class;
 }
 
 =head2 $pages = $bp->list_all_pages([xml => 1]);
@@ -466,16 +427,16 @@ XML as returned by the Backpack server.
 =cut
 
 sub list_all_pages {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  my $req_data = $data{list_all_pages};
-  my $url = $self->{base_url} . $req_data->{url};
+    my $req_data = $data{list_all_pages};
+    my $url      = $self->{base_url} . $req_data->{url};
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $page = $bp->create_page(title => $title,
@@ -488,19 +449,19 @@ true, in which case it returns the raw XML as returned by the Backpack server.
 =cut
 
 sub create_page {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No title for new page' unless $params{title};
-  $params{description} ||= '';
+    croak 'No title for new page' unless $params{title};
+    $params{description} ||= '';
 
-  my $req_data = $data{create_page};
-  my $url   = $self->{base_url} . $req_data->{url};
+    my $req_data = $data{create_page};
+    my $url      = $self->{base_url} . $req_data->{url};
 
-  my $req   = HTTP::Request->new(POST => $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req = HTTP::Request->new( POST => $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $rc = $bp->show_page(id => $id, [xml => 1]);
@@ -512,19 +473,19 @@ raw XML as returned by the Backpack server.
 =cut
 
 sub show_page {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No id' unless $params{id};
+    croak 'No id' unless $params{id};
 
-  my $req_data = $data{show_page};
-  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    my $req_data = $data{show_page};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  my $req   = HTTP::Request->new(POST => $url);
+    my $req = HTTP::Request->new( POST => $url );
 
-  $req->content($self->_expand($req_data->{req}, %params));
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $rc = $bp->destroy_page(id => $id, [xml => 1]);
@@ -536,19 +497,19 @@ as returned by the Backpack server.
 =cut
 
 sub destroy_page {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No id' unless $params{id};
+    croak 'No id' unless $params{id};
 
-  my $req_data = $data{destroy_page};
-  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    my $req_data = $data{destroy_page};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  my $req   = HTTP::Request->new(POST => $url);
+    my $req = HTTP::Request->new( POST => $url );
 
-  $req->content($self->_expand($req_data->{req}, %params));
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $rc = $bp->update_title(id => $id, title => $title, [xml => 1]);
@@ -560,20 +521,20 @@ as returned by the Backpack server.
 =cut
 
 sub update_title {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No id' unless $params{id};
-  croak 'No title' unless $params{title};
+    croak 'No id'    unless $params{id};
+    croak 'No title' unless $params{title};
 
-  my $req_data = $data{update_title};
-  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    my $req_data = $data{update_title};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  my $req   = HTTP::Request->new(POST => $url);
+    my $req = HTTP::Request->new( POST => $url );
 
-  $req->content($self->_expand($req_data->{req}, %params));
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $rc = $bp->update_body(id => $id, description => $desc, [xml => 1]);
@@ -585,19 +546,19 @@ raw XML as returned by the Backpack server.
 =cut
 
 sub update_body {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No id' unless $params{id};
-  croak 'No description' unless defined $params{description};
+    croak 'No id' unless $params{id};
+    croak 'No description' unless defined $params{description};
 
-  my $req_data = $data{update_body};
-  my $url   = $self->{base_url} .$self->_expand($req_data->{url}, %params);
-  my $req   = HTTP::Request->new(POST => $url);
+    my $req_data = $data{update_body};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
+    my $req = HTTP::Request->new( POST => $url );
 
-  $req->content($self->_expand($req_data->{req}, %params));
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $page = $bp->duplicate_page(id => $id, [xml => 1]);
@@ -609,18 +570,18 @@ raw XML as returned by the Backpack server.
 =cut
 
 sub duplicate_page {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No id' unless $params{id};
+    croak 'No id' unless $params{id};
 
-  my $req_data = $data{duplicate_page};
-  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
-  my $req   = HTTP::Request->new(POST => $url);
+    my $req_data = $data{duplicate_page};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
+    my $req = HTTP::Request->new( POST => $url );
 
-  $req->content($self->_expand($req_data->{req}, %params));
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $rc = $bp->link_page(link_page => $id1, to_page => $id2, [xml => 1]);
@@ -632,18 +593,18 @@ by the Backpack server.
 =cut
 
 sub link_page {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No id' unless $params{link_page} and $params{to_page};
+    croak 'No id' unless $params{link_page} and $params{to_page};
 
-  my $req_data = $data{link_page};
-  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
-  my $req   = HTTP::Request->new(POST => $url);
+    my $req_data = $data{link_page};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
+    my $req = HTTP::Request->new( POST => $url );
 
-  $req->content($self->_expand($req_data->{req}, %params));
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $rc = $bp->unlink_page(link_page => $id1, from_page => $id2,
@@ -656,18 +617,18 @@ by the Backpack server.
 =cut
 
 sub unlink_page {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No id' unless $params{link_page} and $params{from_page};
+    croak 'No id' unless $params{link_page} and $params{from_page};
 
-  my $req_data = $data{unlink_page};
-  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
-  my $req   = HTTP::Request->new(POST => $url);
+    my $req_data = $data{unlink_page};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
+    my $req = HTTP::Request->new( POST => $url );
 
-  $req->content($self->_expand($req_data->{req}, %params));
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $rc = $bp->share_page(id => $id, people => \@people,
@@ -680,20 +641,20 @@ page with.
 =cut
 
 sub share_page {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No id' unless $params{id};
-  croak 'No people' unless scalar @{$params{people}};
+    croak 'No id' unless $params{id};
+    croak 'No people' unless scalar @{ $params{people} };
 
-  $params{people} = join "\n", @{$params{people}};
-  my $req_data = $data{share_people};
-  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
-  my $req   = HTTP::Request->new(POST => $url);
+    $params{people} = join "\n", @{ $params{people} };
+    my $req_data = $data{share_people};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
+    my $req = HTTP::Request->new( POST => $url );
 
-  $req->content($self->_expand($req_data->{req}, %params));
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $rc = $bp->make_page_public(id => $id, public => $public,
@@ -706,20 +667,20 @@ private
 =cut
 
 sub make_page_public {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No id' unless $params{id};
-  croak 'No public flag' unless exists $params{public};
+    croak 'No id' unless $params{id};
+    croak 'No public flag' unless exists $params{public};
 
-  $params{public} = !!$params{public};
-  my $req_data = $data{make_page_public};
-  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
-  my $req   = HTTP::Request->new(POST => $url);
+    $params{public} = !!$params{public};
+    my $req_data = $data{make_page_public};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
+    my $req = HTTP::Request->new( POST => $url );
 
-  $req->content($self->_expand($req_data->{req}, %params));
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $rc = $bp->unshare_friend_page(id => $id, [ xml => 1 ]);
@@ -729,20 +690,19 @@ Unshare yourself from a friend's page.
 =cut
 
 sub unshare_friend_page {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No id' unless $params{id};
+    croak 'No id' unless $params{id};
 
-  my $req_data = $data{unshare_friend_page};
-  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
-  my $req   = HTTP::Request->new(POST => $url);
+    my $req_data = $data{unshare_friend_page};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
+    my $req = HTTP::Request->new( POST => $url );
 
-  $req->content($self->_expand($req_data->{req}, %params));
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
-
 
 =head2 $rc = $bp->email_page(id => $id, [ xml => 1 ]);
 
@@ -751,18 +711,18 @@ Email a page to yourself.
 =cut
 
 sub email_page {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No id' unless $params{id};
+    croak 'No id' unless $params{id};
 
-  my $req_data = $data{email_page};
-  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
-  my $req   = HTTP::Request->new(POST => $url);
+    my $req_data = $data{email_page};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
+    my $req = HTTP::Request->new( POST => $url );
 
-  $req->content($self->_expand($req_data->{req}, %params));
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $items = $bp->list_all_items(page_id => $page_id, [xml => 1]);
@@ -774,18 +734,18 @@ XML as returned by the Backpack server.
 =cut
 
 sub list_all_items {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No id' unless $params{page_id};
-  
-  my $req_data = $data{list_all_items};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    croak 'No id' unless $params{page_id};
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req_data = $data{list_all_items};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  return $self->_call(%params, req => $req);
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
+
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $item = $bp->create_item(page_id => $page_id, item => $item, [xml => 1]);
@@ -797,19 +757,19 @@ it returns the raw XML as returned by the Backpack server.
 =cut
 
 sub create_item {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No page id' unless $params{page_id};
-  croak 'No item content' unless $params{item};
+    croak 'No page id'      unless $params{page_id};
+    croak 'No item content' unless $params{item};
 
-  my $req_data = $data{create_item};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    my $req_data = $data{create_item};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $item = $bp->update_item(page_id => $page_id, item => $item, [xml => 1]
@@ -822,20 +782,20 @@ case it returns the raw XML as returned by the Backpack server.
 =cut
 
 sub update_item {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No page id' unless $params{page_id};
-  croak 'No item id' unless $params{id};
-  croak 'No item content' unless $params{item};
+    croak 'No page id'      unless $params{page_id};
+    croak 'No item id'      unless $params{id};
+    croak 'No item content' unless $params{item};
 
-  my $req_data = $data{update_item};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    my $req_data = $data{update_item};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $response = $bp->toggle_item(page_id => $page_id, id => $item_id,
@@ -848,19 +808,19 @@ case it returns the raw XML as returned by the Backpack server.
 =cut
 
 sub toggle_item {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No page id' unless $params{page_id};
-  croak 'No item id' unless $params{id};
+    croak 'No page id' unless $params{page_id};
+    croak 'No item id' unless $params{id};
 
-  my $req_data = $data{toggle_item};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    my $req_data = $data{toggle_item};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $response = $bp->destroy_item(page_id => $page_id, id => $item_id,
@@ -873,19 +833,19 @@ case it returns the raw XML as returned by the Backpack server.
 =cut
 
 sub destroy_item {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No page id' unless $params{page_id};
-  croak 'No item id' unless $params{id};
+    croak 'No page id' unless $params{page_id};
+    croak 'No item id' unless $params{id};
 
-  my $req_data = $data{destroy_item};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    my $req_data = $data{destroy_item};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $response = $bp->move_item(page_id => $page_id, id => $item_id, 
@@ -900,24 +860,26 @@ returns the raw XML as returned by the Backpack server.
 =cut
 
 sub move_item {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No page id' unless $params{page_id};
-  croak 'No item id' unless $params{id};
-  unless (exists $params{direction} &&
-          $params{direction} =~ /move_(lower|higher|to_top|to_bottom)/) {
-    croak 'No direction specified';
-  }
+    croak 'No page id' unless $params{page_id};
+    croak 'No item id' unless $params{id};
+    unless ( exists $params{direction}
+        && $params{direction} =~ /move_(lower|higher|to_top|to_bottom)/ )
+    {
+        croak 'No direction specified';
+    }
 
-  my $req_data = $data{move_item};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
-  #print "url : $url\n";
-  #sleep 2;
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req_data = $data{move_item};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  return $self->_call(%params, req => $req);
+    #print "url : $url\n";
+    #sleep 2;
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
+
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $notes = $bp->list_all_notes(page_id => $page_id, [xml => 1]);
@@ -929,18 +891,18 @@ XML as returned by the Backpack server.
 =cut
 
 sub list_all_notes {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No id' unless $params{page_id};
-  
-  my $req_data = $data{list_all_notes};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    croak 'No id' unless $params{page_id};
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req_data = $data{list_all_notes};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  return $self->_call(%params, req => $req);
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
+
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $note = $bp->create_note(page_id => $page_id, title => $title,
@@ -954,23 +916,23 @@ server.
 =cut
 
 sub create_note {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No page id' unless $params{page_id};
-  croak 'No note title' unless $params{title};
+    croak 'No page id'    unless $params{page_id};
+    croak 'No note title' unless $params{title};
 
-  $params{body} ||= "";
-  
-  my $req_data = $data{create_note};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    $params{body} ||= "";
 
-  print "url: $url\n";
+    my $req_data = $data{create_note};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    print "url: $url\n";
 
-  return $self->_call(%params, req => $req);
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
+
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $note = $bp->update_note(page_id => $page_id, id => $note_id, [xml => 1]
@@ -983,22 +945,22 @@ case it returns the raw XML as returned by the Backpack server.
 =cut
 
 sub update_note {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No page id' unless $params{page_id};
-  croak 'No note id' unless $params{id};
+    croak 'No page id' unless $params{page_id};
+    croak 'No note id' unless $params{id};
 
-  $params{title} ||= "";
-  $params{body} ||= "";
-    
-  my $req_data = $data{update_note};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    $params{title} ||= "";
+    $params{body}  ||= "";
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req_data = $data{update_note};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  return $self->_call(%params, req => $req);
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
+
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $response = $bp->destroy_note(page_id => $page_id, id => $note_id,
@@ -1011,19 +973,19 @@ case it returns the raw XML as returned by the Backpack server.
 =cut
 
 sub destroy_note {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No page id' unless $params{page_id};
-  croak 'No note id' unless $params{id};
+    croak 'No page id' unless $params{page_id};
+    croak 'No note id' unless $params{id};
 
-  my $req_data = $data{destroy_note};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    my $req_data = $data{destroy_note};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $pages = $bp->get_tag_pages(page_id => $id, [ xml => 1 ]);
@@ -1035,18 +997,18 @@ the raw XML as returned by the Backpack server.
 =cut
 
 sub get_tag_pages {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No page id' unless $params{page_id};
- 
-  my $req_data = $data{get_tag_pages};
-  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
-  my $req   = HTTP::Request->new(POST => $url);
+    croak 'No page id' unless $params{page_id};
 
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req_data = $data{get_tag_pages};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
+    my $req = HTTP::Request->new( POST => $url );
 
-  return $self->_call(%params, req => $req);
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
+
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $response = $bp->set_page_tags(page_id => $id, tags => \@tags,
@@ -1063,23 +1025,23 @@ valid request, the tags are not being updated.
 =cut
 
 sub set_page_tags {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No page id' unless $params{page_id};
+    croak 'No page id' unless $params{page_id};
 
-  $params{tags} = join "\n", map { '"'.$_.'"' } @{$params{tags}};
-  my $req_data = $data{set_page_tags};
+    $params{tags} = join "\n", map { '"' . $_ . '"' } @{ $params{tags} };
+    my $req_data = $data{set_page_tags};
 
-  my $url   = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  # print $url.$self->_expand($req_data->{req}, %params);
+    # print $url.$self->_expand($req_data->{req}, %params);
 
-  my $req   = HTTP::Request->new(POST => $url);
+    my $req = HTTP::Request->new( POST => $url );
 
-  $req->content($self->_expand($req_data->{req}, %params));
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $reminders = $bp->upcoming_reminders([ xml => 1 ]);
@@ -1092,17 +1054,17 @@ case it returns the raw XML as returned by the Backpack server.
 =cut
 
 sub upcoming_reminders {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  my $req_data = $data{upcoming_reminders};
+    my $req_data = $data{upcoming_reminders};
 
-  my $url   = $self->{base_url} . $self->_expand($req_data->{url});
-  my $req   = HTTP::Request->new(POST => $url);
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url} );
+    my $req = HTTP::Request->new( POST => $url );
 
-  $req->content($self->_expand($req_data->{req}, %params));
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $reminder = $bp->create_reminder(content => $reminder, [xml => 1],
@@ -1118,20 +1080,20 @@ case it returns the raw XML as returned by the Backpack server.
 =cut
 
 sub create_reminder {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No reminder content' unless $params{content};
+    croak 'No reminder content' unless $params{content};
 
-  $params{remind_at} ||= "";
-  
-  my $req_data = $data{create_reminder};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    $params{remind_at} ||= "";
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req_data = $data{create_reminder};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  return $self->_call(%params, req => $req);
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
+
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $reminder = $bp->update_reminder(id => $reminder_id,
@@ -1148,25 +1110,25 @@ case it returns the raw XML as returned by the Backpack server.
 =cut
 
 sub update_reminder {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No reminder id' unless $params{id};
-  unless (exists $params{content} && exists $params{remind_at}) {
-    my $reminders = $self->upcoming_reminders();
-    $params{content} ||= 
-      $reminders->{reminders}{reminder}{$params{id}}{content};
-    $params{remind_at} ||= 
-      $reminders->{reminders}{reminder}{$params{id}}{remind_at};
-  }
-  
-  my $req_data = $data{update_reminder};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    croak 'No reminder id' unless $params{id};
+    unless ( exists $params{content} && exists $params{remind_at} ) {
+        my $reminders = $self->upcoming_reminders();
+        $params{content} ||=
+          $reminders->{reminders}{reminder}{ $params{id} }{content};
+        $params{remind_at} ||=
+          $reminders->{reminders}{reminder}{ $params{id} }{remind_at};
+    }
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req_data = $data{update_reminder};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  return $self->_call(%params, req => $req);
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
+
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $response = $bp->destroy_reminder( id => $reminder_id,  [xml => 1]);
@@ -1178,18 +1140,18 @@ case it returns the raw XML as returned by the Backpack server.
 =cut
 
 sub destroy_reminder {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No reminder id' unless $params{id};
+    croak 'No reminder id' unless $params{id};
 
-  my $req_data = $data{destroy_reminder};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    my $req_data = $data{destroy_reminder};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $emails = $bp->list_all_emails(page_id => $page_id, [xml => 1]);
@@ -1201,18 +1163,18 @@ the raw XML as returned by the Backpack server.
 =cut
 
 sub list_all_emails {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No id' unless $params{page_id};
-  
-  my $req_data = $data{list_all_emails};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    croak 'No id' unless $params{page_id};
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req_data = $data{list_all_emails};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  return $self->_call(%params, req => $req);
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
+
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $email = $bp->show_email(page_id => $page_id, id => $reminder_id, 
@@ -1225,19 +1187,19 @@ case it returns the raw XML as returned by the Backpack server.
 =cut
 
 sub show_email {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No page id' unless $params{page_id};
-  croak 'No email id' unless $params{id};
+    croak 'No page id'  unless $params{page_id};
+    croak 'No email id' unless $params{id};
 
-  my $req_data = $data{show_email};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    my $req_data = $data{show_email};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $response = $bp->destroy_email(page_id => $page_id, id => $reminder_id, 
@@ -1250,19 +1212,19 @@ case it returns the raw XML as returned by the Backpack server.
 =cut
 
 sub destroy_email {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No page id' unless $params{page_id};
-  croak 'No email id' unless $params{id};
+    croak 'No page id'  unless $params{page_id};
+    croak 'No email id' unless $params{id};
 
-  my $req_data = $data{destroy_email};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    my $req_data = $data{destroy_email};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $exported_bp = $bp->export([xml => 1]);
@@ -1274,16 +1236,16 @@ XML as returned by the Backpack server.
 =cut
 
 sub export {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  my $req_data = $data{export};
-  my $url = $self->{base_url} . $req_data->{url};
+    my $req_data = $data{export};
+    my $url      = $self->{base_url} . $req_data->{url};
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $lists = $bp->list_all_lists(page_id => $page_id, [xml => 1]);
@@ -1295,18 +1257,18 @@ in which case it returns the raw XML as returned by the Backpack server.
 =cut
 
 sub list_all_lists {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No id' unless $params{page_id};
+    croak 'No id' unless $params{page_id};
 
-  my $req_data = $data{list_all_lists};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    my $req_data = $data{list_all_lists};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);	
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $list = $bp->list_this_list(page_id => $page_id, list_id => $list_id, [xml => 1]);
@@ -1319,19 +1281,19 @@ Backpack server.
 =cut
 
 sub list_this_list {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No page id' unless $params{page_id};
-  croak 'No list id' unless $params{list_id};
+    croak 'No page id' unless $params{page_id};
+    croak 'No list id' unless $params{list_id};
 
-  my $req_data = $data{list_this_list};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    my $req_data = $data{list_this_list};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $list = $bp->create_list(page_id => $page_id, title => $title, [xml => 1]);
@@ -1343,19 +1305,19 @@ case it returns the raw XML as returned by the Backpack server.
 =cut
 
 sub create_list {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No page id' unless $params{page_id};
-  croak 'No list title' unless $params{title};
+    croak 'No page id'    unless $params{page_id};
+    croak 'No list title' unless $params{title};
 
-  my $req_data = $data{create_list};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    my $req_data = $data{create_list};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $list = $bp->update_list(page_id => $page_id, list_id => $list_id, title => $title, [xml => 1]);
@@ -1368,20 +1330,20 @@ returned by the Backpack server.
 =cut
 
 sub update_list {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No page id' unless $params{page_id};
-  croak 'No list id' unless $params{list_id};
-  croak 'No title' unless $params{title};
+    croak 'No page id' unless $params{page_id};
+    croak 'No list id' unless $params{list_id};
+    croak 'No title'   unless $params{title};
 
-  my $req_data = $data{update_list};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    my $req_data = $data{update_list};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $list = $bp->destroy_list(page_id => $page_id, list_id => $list_id, [xml => 1]);
@@ -1394,19 +1356,19 @@ Backpack server.
 =cut
 
 sub destroy_list {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No page id' unless $params{page_id};
-  croak 'No list id' unless $params{list_id};
+    croak 'No page id' unless $params{page_id};
+    croak 'No list id' unless $params{list_id};
 
-  my $req_data = $data{destroy_list};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    my $req_data = $data{destroy_list};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
 =head2 $list = $bp->create_list_item(page_id => $page_id, list_id => $list_id, item = $item, [xml => 1]);
@@ -1421,47 +1383,47 @@ server.
 =cut
 
 sub create_list_item {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  croak 'No page id' unless $params{page_id};
-  croak 'No list id' unless $params{list_id};
-  croak 'No item content' unless $params{item};
+    croak 'No page id'      unless $params{page_id};
+    croak 'No list id'      unless $params{list_id};
+    croak 'No item content' unless $params{item};
 
-  my $req_data = $data{create_list_item};
-  my $url      = $self->{base_url} . $self->_expand($req_data->{url}, %params);
+    my $req_data = $data{create_list_item};
+    my $url = $self->{base_url} . $self->_expand( $req_data->{url}, %params );
 
-  my $req = HTTP::Request->new('POST', $url);
-  $req->content($self->_expand($req_data->{req}, %params));
+    my $req = HTTP::Request->new( 'POST', $url );
+    $req->content( $self->_expand( $req_data->{req}, %params ) );
 
-  return $self->_call(%params, req => $req);
+    return $self->_call( %params, req => $req );
 }
 
-
 sub _call {
-  my $self = shift;
-  my %params = @_;
+    my $self   = shift;
+    my %params = @_;
 
-  my $resp = $self->{ua}->request($params{req});
-  my $xml = $resp->content;
+    my $resp = $self->{ua}->request( $params{req} );
+    my $xml  = $resp->content;
 
-  if ($params{xml}) {
-    return $xml;
-  } else {
-    my $data = XMLin($xml, ForceArray => $self->{forcearray});
-    return $data;
-  }
+    if ( $params{xml} ) {
+        return $xml;
+    }
+    else {
+        my $data = XMLin( $xml, ForceArray => $self->{forcearray} );
+        return $data;
+    }
 }
 
 sub _expand {
-  my $self = shift;
-  my $string = shift;
-  my %params = @_;
+    my $self   = shift;
+    my $string = shift;
+    my %params = @_;
 
-  $string =~ s/\[S:(\w+)]/$self->{$1}/g;
-  $string =~ s/\[P:(\w+)]/$params{$1}/g;
+    $string =~ s/\[S:(\w+)]/$self->{$1}/g;
+    $string =~ s/\[P:(\w+)]/$params{$1}/g;
 
-  return $string;
+    return $string;
 }
 
 =head1 TO DO
