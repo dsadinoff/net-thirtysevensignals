@@ -116,28 +116,53 @@ my %data = (
 	url => '/people/[P:id].xml',
     },
 
+
+    'person_create' =>
+    {
+	url => '/people.xml?reload=true',
+	req => '
+<person>
+  <first-name>[P:firstName]</first-name>
+  <last-name>[P:lastName]</last-name>
+  <company-name>[P:companyName]</company-name>
+  <contact-data>
+    <email-addresses>
+      <email-address>
+        <address>[P:emailAddress]</address>
+        <location>Work</location>
+      </email-address>
+    </email-addresses>
+  </contact-data>
+</person>'
+    },
+
+
+    'person_destroy' =>
+    {
+	method => "DELETE",
+	url => '/people/[P:id].xml',
+    },
+
     'people_list_by_criteria' =>
     {
 	url => '/people/search.xml',
 	return_key => 'person',
     },
+
+    'tags_list_all' =>
+    {
+	url => '/tags.xml',
+	return_key=>'tag',
+    },
     
     
-
-
-	    'tags_list_all' =>
-	    {
-	     url => '/tags.xml',
-	     return_key=>'tag',
-	    },
-
-
-	    'tags_list_for_subject' =>
-	    {
-		url => '/[P:subjectType]/[P:subjectID]/tags.xml',
-		required_params => [qw(subjectType subjectID )],
-		return_key => 'tag',
-	    },
+    'tags_list_for_subject' =>
+    {
+	url => '/[P:subjectType]/[P:subjectID]/tags.xml',
+	required_params => [qw(subjectType subjectID )],
+	return_key => 'tag',
+    },
+    
 
 	    'create_page' =>
 	    {
@@ -627,6 +652,8 @@ Get a list of all of your Highrise people. Returns a Perl data structure
 unless the C<xml> parameter is true, in which case it returns the raw
 XML as returned by the Highrise server.
 
+returns a $person hashref or die()s if the person does not exist;
+
 =cut
 
 sub person_get {
@@ -636,10 +663,80 @@ sub person_get {
   my $req_data = $data{person_get};
   my $url = $self->{base_url} . $req_data->{url};
   my $expandedURL = $self->_expand($url, %params);
-  warn "url = $url, expanded = $expandedURL" if $self->{debug};
   my $req = HTTP::Request->new('GET', $expandedURL);
 
   return $self->_call(%params, req => $req);
+}
+
+
+
+=head2 $pages = $hr->person_create(
+                                [xml => 1]);
+
+Create a person
+unless the C<xml> parameter is true, in which case it returns the raw
+XML as returned by the Highrise server.
+Pass in parameters with keys:
+   firstName
+   lastName
+   companyName
+   emailAddress
+
+=cut
+
+sub person_create {
+  my $self = shift;
+  my %params = @_;
+
+  my $req_data = $data{person_create};
+  my $url = $self->{base_url} . $req_data->{url};
+  my $expandedURL = $self->_expand($url, %params);
+  warn "url = $url, expanded = $expandedURL" if $self->{debug};
+  my $req = HTTP::Request->new('POST', $expandedURL);
+  my %encodedParams = ();
+  while (my ($key, $value)  = each %params){
+      $value =~ s/&/&amp;/g;
+      $value =~ s/</&lt;/g;
+      $value =~ s/>/&gt;/g;
+      $encodedParams{$key} = $value;
+  }
+  $req->content($self->_expand($req_data->{req}, %encodedParams));
+
+  return $self->_call(%params, req => $req);
+}
+
+
+
+=head2 $pages = $hr->person_destroy();
+
+Destroy a person.  either returns undef or die()s.
+
+Pass in parameters with keys:
+   id => the personid to be destroyed
+=cut
+
+sub person_destroy {
+  my $self = shift;
+  my %params = @_;
+
+  my $req_data = $data{person_destroy};
+  my $url = $self->{base_url} . $req_data->{url};
+  my $expandedURL = $self->_expand($url, %params);
+  my $req = HTTP::Request->new($req_data->{method}, $expandedURL);
+
+  if( $req_data->{req}){
+      my %encodedParams = ();
+      while (my ($key, $value)  = each %params){
+	  $value =~ s/&/&amp;/g;
+	  $value =~ s/</&lt;/g;
+	  $value =~ s/>/&gt;/g;
+	  $encodedParams{$key} = $value;
+      }
+      $req->content($self->_expand($req_data->{req}, %encodedParams));
+  }
+  
+  $self->_call(%params, req => $req, xml=>1);
+  return ;
 }
 
 =head2 $page = $hr->create_page(title => $title,
@@ -657,7 +754,7 @@ sub _call {
 
   my $resp = $self->{ua}->request($params{req});
   unless(  $resp->is_success){
-      die "failed with request" . $params{req}->dump;
+      die "Request Failed: ".$resp->status_line."\n"; 
   }
   my $xml = $resp->content;
   if( $self->{debug}){
@@ -710,11 +807,11 @@ Lots of stuff implemented by neshura when I was being too tardy!
 
 =head1 BUGS
 
-Please report bugs by email to E<lt>bug-Net-Highrise@rt.cpan.orgE<gt>.
+Please report bugs by email to danny@sadinoff.com
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2005, Dave Cross.  All Rights Reserved.
+Copyright (c) 2005,2010, Dave Cross, Danny Sadinoff.  All Rights Reserved.
 
 This script is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
