@@ -2,7 +2,7 @@ Changes
 MANIFEST
 README
 Build.PL
-lib/Net/Backpack.pm
+lib/Net/ThirtySevenSignals/Highrise.pm
 Makefile.PL
 MANIFEST.SKIP
 META.yml
