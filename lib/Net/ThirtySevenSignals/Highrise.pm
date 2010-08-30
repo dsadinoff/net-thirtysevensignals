@@ -2,13 +2,13 @@
 
 =head1 NAME
 
-Net::ThirtySevenSignals::Highrise - Perl extension for interfacing with Highrise
+Net::ThirtySevenSignals::Highrise - Perl extension for talking 37Signals' Highrise API
 
 =head1 SYNOPSIS
 
   use Net::ThirtySevenSignals::Highrise;
 
-  my $bp = Net::ThirtySevenSignals::Highrise(
+  my $hr = Net::ThirtySevenSignals::Highrise(
                          user  => $your_highrise_url_prefix,
                          token => $your_highrise_api_token,
                          ssl   => $use_ssl);
@@ -19,36 +19,15 @@ Net::ThirtySevenSignals::Highrise - Perl extension for interfacing with Highrise
   # return a hashref of people
   my $people = $hr->people_list_by_criteria(email => 'danny@example.com');
 
-  # Alternatively get the same information in XML format
-  # my $pages = $hr->list_all_pages(xml => 1);
-
-  # Create a new page
-  my $page = $hr->create_page(title => 'A test page',
-                              description => 'Created with the Highrise API');
-
-  # Get the id of the new page
-  my $page_id = $page->{page}{id};
-
-  # Get details of the new page (in XML format)
-  my $page_xml = $hr->show_page(id => $page->{page}{id});
-
-  # Rename the page
-  $hr->update_title(id => $page_id,
-                    title => 'A new title');
-
-  # Change the body
-  $hr->update_description(id => $page_id,
-                          description => 'Something new');
-
-  # Remove the page
-  $hr->destroy_page(id => $page_id);
 
 =head1 DESCRIPTION
 
 Net::ThirtySevenSignals::Highrise provides a thin Perl wrapper around the Highrise API
-(L<http://backpackit.com/api/>). Currently it only implements the
-parts of the API that manipulate Highrise pages. Future releases
-will increase the coverage.
+(L<http://developer.37signals.com/highrise/>). Currently it only implements a very few
+API points. 
+
+The API is unstable at this time.
+
 
 =head2 Getting Started
 
@@ -57,27 +36,22 @@ API token. And in order to get one of those, you'll need a Highrise
 account. But then again, the API will be pretty useless to you if
 you don't have a Highrise account to manipulate with it.
 
-You can get a Highrise account from L<http://backbackit.com/signup>.
+You can get a Highrise account from L<http://highrisehq.com>.
 
-=head2 Backback API
+=head2 Highrise API
 
 The Highrise API is based on XML over HTTP. You send an XML message
 over HTTP to the Highrise server and the server sends a response to
 you which is also in XML. The format of the various XML requests and
-responses are defined at L<http://backpackit.com/api>.
+responses are defined at L<http://developer.37signals.com/highrise/>
 
 This module removes the need to deal with any XML. You create an
 object to talk to the Highrise server and call methods on that object
-to manipulate your Backpage pages. The values returned from Highrise
+to manipulate your data. The values returned from Highrise
 are converted to Perl data structures before being handed back to
 you (although it is also possible to get back the raw XML).
 
 =head1 Important Note
-
-Net::ThirtySevenSignals::Highrise uses XML::Simple to parse the data that is returned from
-Highrise. From version 1.10 of Net::ThirtySevenSignals::Highrise has changed. By default we
-now pass the parameter C<ForceArray =E<gt> 1> to XML::Simple. This will
-change the Perl data structure returned by most calls.
 
 To get the old behaviour back, you can pass the parameter C<forcearray
 =E<gt> 0> to the C<new> function.
