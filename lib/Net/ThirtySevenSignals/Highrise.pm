@@ -51,9 +51,9 @@ to manipulate your data. The values returned from Highrise
 are converted to Perl data structures before being handed back to
 you (although it is also possible to get back the raw XML).
 
-=head1 Important Note
+=head1 XML
 
-To get the old behaviour back, you can pass the parameter C<forcearray
+To get the XML back from the API, you can pass the parameter C<forcearray
 =E<gt> 0> to the C<new> function.
 
 =cut
@@ -76,7 +76,7 @@ use URI;
 use HTTP::Request;
 use XML::Simple;
 
-our $VERSION = '1.14';
+our $VERSION = '0.01_1';
 
 my %data = (
     'people_list_all' =>
@@ -772,14 +772,14 @@ More tests
 
 Danny Sadinoff E<lt>danny@sadinoff.comE<gt>
 
-derived from Dave Cross's Net::Backpack
+derived directly from Dave Cross's Net::Backpack
 
 
 Please feel free to email me to tell me how you are using the module.
 
-Lots of stuff implemented by neshura when I was being too tardy!
-
 =head1 BUGS
+
+the API is incomplete, to say the least.
 
 Please report bugs by email to danny@sadinoff.com
 

@@ -23,7 +23,8 @@ SKIP: {
     ok($hr);
     ok(ref $hr eq 'Net::ThirtySevenSignals::Highrise');
     my $res = $hr->people_list_all();
-    
+    note(" received ".scalar(@{$res})." peopel");
+    # 7
     ok( @{ $res } > 1 );
     
     my $firstPerson = $res->[0];
@@ -33,15 +34,18 @@ SKIP: {
     $personID = $taggyPersonID;
     
     my $tags4Person = $hr->tags_list_for_subject(subjectType=>'people',subjectID => $personID);
+    # 8
     ok( @{$tags4Person} > 0);
 
     
     skip ("no HIGHRISE_EMAIL set", 1)
 	unless $ENV{HIGHRISE_EMAIL};
-
-    my $criteriaResults = $hr->people_list_by_criteria(email=> $ENV{HIGHRISE_EMAIL});
-    ok(('ARRAY' eq ref( $criteriaResults))&&  ( 1== @{$criteriaResults} ), "criteria fetch");
-
+    if( $ENV{HIGHRISE_EMAIL} ){
+	my $criteriaResults = $hr->people_list_by_criteria(email=> $ENV{HIGHRISE_EMAIL});
+	# 9
+	ok(('ARRAY' eq ref( $criteriaResults))&&  ( 1== @{$criteriaResults} ), "criteria fetch");
+    }
+    note("HI");
 
 
     my $personRec = $hr->person_create(
@@ -52,7 +56,6 @@ SKIP: {
     my $newPersonID = $personRec->{id}[0]{content};
     
     my $newPerson = $hr->person_get(id=> $newPersonID);
-
     ok( $newPersonID && $newPerson, 'created personID');
     
     $hr->person_destroy(id => $newPersonID , xml=>1);
