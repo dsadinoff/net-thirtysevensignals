@@ -6,6 +6,5 @@ lib/Net/ThirtySevenSignals/Highrise.pm
 Makefile.PL
 MANIFEST.SKIP
 META.yml
-t/Net-Backpack.t
 t/pod.t
 t/pod_coverage.t

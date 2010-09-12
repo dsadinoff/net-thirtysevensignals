@@ -76,7 +76,7 @@ use URI;
 use HTTP::Request;
 use XML::Simple;
 
-our $VERSION = '0.01_1';
+our $VERSION = '0.01_2';
 
 my %data = (
     'people_list_all' =>
