@@ -76,7 +76,7 @@ use URI;
 use HTTP::Request;
 use XML::Simple;
 
-our $VERSION = '0.01_2';
+our $VERSION = '0.01_4';
 
 my %data = (
     'people_list_all' =>
@@ -91,6 +91,12 @@ my %data = (
     },
 
 
+    tag_add =>{
+	url => '/[P:subjectType]/[P:subjectID]/tags.xml',
+	method => "POST",
+	req => '<name>[P:tagName]</name>'
+    },
+
     'person_create' =>
     {
 	url => '/people.xml?reload=true',
@@ -100,16 +106,29 @@ my %data = (
   <last-name>[P:lastName]</last-name>
   <company-name>[P:companyName]</company-name>
   <contact-data>
+
+    [% IF P:emailAddress %]
     <email-addresses>
       <email-address>
         <address>[P:emailAddress]</address>
         <location>Work</location>
       </email-address>
     </email-addresses>
+    [% END %]
+
+
+    [% IF P:workPhone %]
+   <phone-numbers>
+      <phone-number>
+        <number>[P:workPhone]</number>
+        <location>Work</location>
+      </phone-number>
+    </phone-numbers>
+    [% END %]
+
   </contact-data>
 </person>'
     },
-
 
     'person_destroy' =>
     {
@@ -136,7 +155,6 @@ my %data = (
 	required_params => [qw(subjectType subjectID )],
 	return_key => 'tag',
     },
-    
 
 	    'create_page' =>
 	    {
@@ -655,6 +673,7 @@ Pass in parameters with keys:
    lastName
    companyName
    emailAddress
+   emailAddress
 
 =cut
 
@@ -679,6 +698,32 @@ sub person_create {
   return $self->_call(%params, req => $req);
 }
 
+sub tag_add {
+  my $self = shift;
+  my ($subject, $subjectType, $tagName ) = @_;
+
+  my $req_data = $data{tag_add};
+  use Data::Dumper;
+  warn "tag add.  Subject = ".Dumper($subject);
+  my %params = ( subjectType => $subjectType, 
+		 tagName => $tagName,
+		 subjectID => $subject->{id}[0]{content},
+      );
+  my $url = $self->{base_url} . $req_data->{url};
+
+  my $expandedURL = $self->_expand($url, %params);
+  my $req = HTTP::Request->new('POST', $expandedURL);
+  my %encodedParams = ();
+  while (my ($key, $value)  = each %params){
+      $value =~ s/&/&amp;/g;
+      $value =~ s/</&lt;/g;
+      $value =~ s/>/&gt;/g;
+      $encodedParams{$key} = $value;
+  }
+  $req->content($self->_expand($req_data->{req}, %encodedParams));
+
+  return $self->_call(%params, req => $req);
+}
 
 
 =head2 $pages = $hr->person_destroy();
@@ -747,12 +792,44 @@ sub _expand {
   my $self = shift;
   my $string = shift;
   my %params = @_;
+  my $startTag = qr"\Q[%\E";
+  my $endTag = "%]";
+  $string =~ s{ $startTag \s* IF \s* P:(\w+) \s*  $endTag
+             (.+?)
+              $startTag \s*  END \s*  $endTag
+          } {
+	      my ($condParam, $ifClause ) = ($1,$2);
+	      if( $params{$1} ){
+		  $2;
+	      }
+	      else{
+		  '';
+	      }
+          }sexg;
 
   $string =~ s/\[S:(\w+)]/$self->{$1}/g;
   $string =~ s/\[P:(\w+)]/$params{$1}/g;
-
+  warn "expanded is $string\n";
   return $string;
 }
+
+
+
+
+=head2 $url = $hr->person_url($personHash);
+
+Create an URL pointing at a person page.
+
+=cut
+
+sub person_url{
+    my $self = shift;
+    my ($person) = @_;
+    return sprintf ("http://%s.highrisehq.com/people/%d", $self->{user}, $person->{id}->[0]->{content});
+}
+
+
+
 
 =head1 TO DO
 
@@ -795,6 +872,8 @@ modify it under the same terms as Perl itself.
 L<perl>, L<http://developer.37signals.com/highrise/>
 
 =cut
+
+
 
 1;
 __END__
@@ -1751,6 +1830,5 @@ sub create_list_item {
 
   return $self->_call(%params, req => $req);
 }
-
 
 

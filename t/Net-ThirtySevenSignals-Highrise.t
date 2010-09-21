@@ -1,20 +1,23 @@
 use Data::Dumper;		#  -*- perl -*-
 use strict;
-use Test::More tests => 11;
+use Test::More tests => 15;
 BEGIN { use_ok('Net::ThirtySevenSignals::Highrise') };
 
 eval { Net::ThirtySevenSignals::Highrise->new };
 ok($@);
 
-eval { Net::ThirtySevenSignals::Highrise->new(user => $ENV{HIGHRISE_USER}) };
-ok($@);
-
-eval { Net::ThirtySevenSignals::Highrise->new(token => $ENV{HIGHRISE_TOKEN}) };
-ok($@);
 
 SKIP: {
-    skip 'HIGHRISE_TOKEN and HIGHRISE_USER must be set', 6
+    skip 'HIGHRISE_TOKEN and HIGHRISE_USER must be set', 8
 	unless $ENV{HIGHRISE_TOKEN} && $ENV{HIGHRISE_USER};
+
+
+    eval { Net::ThirtySevenSignals::Highrise->new(user => $ENV{HIGHRISE_USER}) };
+    ok($@);
+
+    eval { Net::ThirtySevenSignals::Highrise->new(token => $ENV{HIGHRISE_TOKEN}) };
+    ok($@);
+
     my $hr = Net::ThirtySevenSignals::Highrise->new(
 	user  => $ENV{HIGHRISE_USER},
 	token => $ENV{HIGHRISE_TOKEN},
@@ -38,15 +41,6 @@ SKIP: {
     ok( @{$tags4Person} > 0);
 
     
-    skip ("no HIGHRISE_EMAIL set", 1)
-	unless $ENV{HIGHRISE_EMAIL};
-    if( $ENV{HIGHRISE_EMAIL} ){
-	my $criteriaResults = $hr->people_list_by_criteria(email=> $ENV{HIGHRISE_EMAIL});
-	# 9
-	ok(('ARRAY' eq ref( $criteriaResults))&&  ( 1== @{$criteriaResults} ), "criteria fetch");
-    }
-    note("HI");
-
 
     my $personRec = $hr->person_create(
 	'firstName' => 'Joe', 'LastName' => 'Tester',
@@ -56,7 +50,8 @@ SKIP: {
     my $newPersonID = $personRec->{id}[0]{content};
     
     my $newPerson = $hr->person_get(id=> $newPersonID);
-    ok( $newPersonID && $newPerson, 'created personID');
+    #9
+    ok( $newPersonID && $newPerson, 'created personID with email');
     
     $hr->person_destroy(id => $newPersonID , xml=>1);
 
@@ -64,9 +59,40 @@ SKIP: {
     eval{
 	$newPerson = $hr->person_get(id=> $newPersonID);
     };
-
+    #10
     ok(!defined $newPerson, 'destroyed');
-    
-    
-}
 
+
+    # create with just phone
+    $personRec = $hr->person_create(
+	'firstName' => 'Joe', 'LastName' => 'Tester',
+	'companyName' =>'paternostro & kill',
+	'workPhone' =>'555-1212',
+	);
+    $newPersonID = $personRec->{id}[0]{content};
+    $newPerson = $hr->person_get(id=> $newPersonID);
+    #11
+    ok( $newPersonID && $newPerson, 'created personID with phone');
+    
+
+    $hr->tag_add($newPerson, 'people', 'testing');
+    my $tags = $hr->tags_list_for_subject(subjectType=> 'people',subjectID=>$newPersonID);
+    ok ($tags, 'tags returned');
+    ok (@$tags == 1, 'one tag');
+    ok ($tags->[0]{name} eq 'testing', 'tag name correct');
+
+    $hr->person_destroy(id => $newPersonID );
+    
+
+
+    
+    skip ("no HIGHRISE_EMAIL set", 1)
+	unless $ENV{HIGHRISE_EMAIL};
+    if( $ENV{HIGHRISE_EMAIL} ){
+	my $criteriaResults = $hr->people_list_by_criteria(email=> $ENV{HIGHRISE_EMAIL});
+	# 12
+	ok(('ARRAY' eq ref( $criteriaResults))&&  ( 1== @{$criteriaResults} ), "criteria fetch");
+    }
+    note("HI");
+
+}
