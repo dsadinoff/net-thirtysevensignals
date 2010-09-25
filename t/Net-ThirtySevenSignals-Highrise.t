@@ -43,9 +43,10 @@ SKIP: {
     
 
     my $personRec = $hr->person_create(
-	'firstName' => 'Joe', 'LastName' => 'Tester',
+	'firstName' => 'Joe',
+	'lastName' => 'Tester',
 	'emailAddress' =>'joe@example.com',
-	'companyName' =>'paternostro & kill',
+	'companyName' =>'Example Company',
 	);
     my $newPersonID = $personRec->{id}[0]{content};
     
@@ -65,8 +66,9 @@ SKIP: {
 
     # create with just phone
     $personRec = $hr->person_create(
-	'firstName' => 'Joe', 'LastName' => 'Tester',
-	'companyName' =>'paternostro & kill',
+	'firstName' => 'Joe',
+	'lastName' => 'Tester',
+	'companyName' =>'Example Company',
 	'workPhone' =>'555-1212',
 	);
     $newPersonID = $personRec->{id}[0]{content};
@@ -79,12 +81,10 @@ SKIP: {
     my $tags = $hr->tags_list_for_subject(subjectType=> 'people',subjectID=>$newPersonID);
     ok ($tags, 'tags returned');
     ok (@$tags == 1, 'one tag');
-    ok ($tags->[0]{name} eq 'testing', 'tag name correct');
+    my $actualtag = $tags->[0]{name}[0];
+    ok ($actualtag eq 'testing', "tag name incorrect : $actualtag");
 
     $hr->person_destroy(id => $newPersonID );
-    
-
-
     
     skip ("no HIGHRISE_EMAIL set", 1)
 	unless $ENV{HIGHRISE_EMAIL};

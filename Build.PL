@@ -1,7 +1,7 @@
 use Module::Build;
 
 my $build = Module::Build->new(module_name => 'Net::ThirtySevenSignals::Highrise',
-                               dist_version => '0.01_4',
+                               dist_version => '0.01_5',
 			       license => 'perl',
  			       requires => {
 			 		    perl             => '5.6.0',
@@ -9,6 +9,7 @@ my $build = Module::Build->new(module_name => 'Net::ThirtySevenSignals::Highrise
                                             'HTTP::Request'  => 0,
                                             'XML::Simple'    => 0,
                                             'URI'    => 0,
+                                            'Log::Log4perl'    => 0,
 					   },
                                build_requires => {
                                                   'Test::More' => 0,

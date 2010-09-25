@@ -75,8 +75,11 @@ use LWP::UserAgent;
 use URI;
 use HTTP::Request;
 use XML::Simple;
+use Log::Log4perl qw( get_logger );
 
-our $VERSION = '0.01_4';
+our $VERSION = '0.01_5';
+my $logger = get_logger();
+
 
 my %data = (
     'people_list_all' =>
@@ -698,6 +701,16 @@ sub person_create {
   return $self->_call(%params, req => $req);
 }
 
+
+=head2 $pages = $hr->tag_add(  $subject, $subjectType, $tagName );
+
+add a tag to an item.  
+$subject should be a perl structure returned from one of person_get, company_get etc.
+$subjectType should be one of 
+   people
+   
+=cut
+
 sub tag_add {
   my $self = shift;
   my ($subject, $subjectType, $tagName ) = @_;
@@ -773,7 +786,7 @@ sub _call {
 
   my $resp = $self->{ua}->request($params{req});
   unless(  $resp->is_success){
-      die "Request Failed: ".$resp->status_line."\n"; 
+      die "Request Failed: ".$resp->status_line."\t".$resp->content; 
   }
   my $xml = $resp->content;
   if( $self->{debug}){
@@ -809,7 +822,7 @@ sub _expand {
 
   $string =~ s/\[S:(\w+)]/$self->{$1}/g;
   $string =~ s/\[P:(\w+)]/$params{$1}/g;
-  warn "expanded is $string\n";
+  # warn "expanded is $string\n";
   return $string;
 }
 
