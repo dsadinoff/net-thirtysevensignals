@@ -75,10 +75,10 @@ use LWP::UserAgent;
 use URI;
 use HTTP::Request;
 use XML::Simple;
-use Log::Log4perl qw( get_logger );
+# use Log::Log4perl qw( get_logger );
 
 our $VERSION = '0.01_5';
-my $logger = get_logger();
+# my $logger = get_logger();
 
 
 my %data = (
