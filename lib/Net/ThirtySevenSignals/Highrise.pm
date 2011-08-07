@@ -77,7 +77,6 @@ use HTTP::Request;
 use XML::Simple;
 # use Log::Log4perl qw( get_logger );
 
-our $VERSION = '0.02';
 # my $logger = get_logger();
 
 
@@ -863,7 +862,6 @@ More tests
 Danny Sadinoff E<lt>danny@sadinoff.comE<gt>
 
 derived directly from Dave Cross's Net::Backpack
-
 
 Please feel free to email me to tell me how you are using the module.
 

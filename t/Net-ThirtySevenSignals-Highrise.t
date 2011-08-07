@@ -1,6 +1,6 @@
 use Data::Dumper;		#  -*- perl -*-
 use strict;
-use Test::More tests => 15;
+use Test::More tests => 10;
 BEGIN { use_ok('Net::ThirtySevenSignals::Highrise') };
 
 eval { Net::ThirtySevenSignals::Highrise->new };
@@ -26,7 +26,7 @@ SKIP: {
     ok($hr);
     ok(ref $hr eq 'Net::ThirtySevenSignals::Highrise');
     my $res = $hr->people_list_all();
-    note(" received ".scalar(@{$res})." peopel");
+    note(" received ".scalar(@{$res})." people");
     # 7
     ok( @{ $res } > 1 );
     
