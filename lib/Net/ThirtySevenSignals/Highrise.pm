@@ -77,7 +77,7 @@ use HTTP::Request;
 use XML::Simple;
 # use Log::Log4perl qw( get_logger );
 
-our $VERSION = '0.01_5';
+our $VERSION = '0.02';
 # my $logger = get_logger();
 
 
