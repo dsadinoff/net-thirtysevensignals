@@ -1,1 +1,4 @@
 Net-ThirtySevenSignals-Highrise-*
+_build/*
+blib
+*~
